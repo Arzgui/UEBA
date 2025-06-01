@@ -1,0 +1,38 @@
+{
+  "type": "monitor",
+  "name": "Brute Force Generic",
+  "enabled": true,
+  "schedule": { "period": { "interval": 1, "unit": "MINUTES" } },
+  "inputs": [{
+    "search": {
+      "indices": ["ueba-events"],
+      "query": {
+        "size": 0,
+        "query": {
+          "bool": {
+            "must": [
+              { "match_phrase": { "log": "failed to log on" } },
+              { "range": { "@timestamp": { "gte": "now-5m", "lte": "now" } } }
+            ]
+          }
+        }
+      }
+    }
+  }],
+  "triggers": [{
+    "name": "TooManyFailedLogins",
+    "severity": "HIGH",
+    "condition": {
+      "script": {
+        "source": "ctx.results[0].hits.total.value > 5",
+        "lang": "painless"
+      }
+    },
+    "actions": [{
+      "name": "NotifyOnBruteForce",
+      "destination_id": "VcduLJcB_WPuNZx3lk_6",
+      "subject_template": { "source": "ALERTE [Brute Force] (Criticité: HIGH)" },
+      "message_template": { "source": "Plus de 5 échecs de login dans les 5 dernières minutes. Détails: {{ctx.results.0.hits.total.value}} tentatives détectées." }
+    }]
+  }]
+}

@@ -1,0 +1,40 @@
+{
+  "type": "monitor",
+  "name": "Suspicious Process Detection",
+  "enabled": true,
+  "schedule": { "period": { "interval": 1, "unit": "MINUTES" } },
+  "inputs": [{
+    "search": {
+      "indices": ["ueba-events"],
+      "query": {
+        "size": 1,
+        "query": {
+          "bool": {
+            "must": [
+              { "match_phrase": { "tags": "mitre_process_suspect" } }
+            ],
+            "filter": [
+              { "range": { "@timestamp": { "gte": "now-5m" } } }
+            ]
+          }
+        }
+      }
+    }
+  }],
+  "triggers": [{
+    "name": "SuspiciousProcessDetected",
+    "severity": "MEDIUM",
+    "condition": {
+      "script": {
+        "source": "ctx.results[0].hits.total.value > 0",
+        "lang": "painless"
+      }
+    },
+    "actions": [{
+      "name": "NotifyOnProcessSuspect",
+      "destination_id": "VcduLJcB_WPuNZx3lk_6",
+      "subject_template": { "source": "ALERTE [Process Suspect] (Criticité: MEDIUM)" },
+      "message_template": { "source": "ALERTE : Processus suspect détecté ! Process : {{ctx.results.0.hits.hits.0._source.new_process}} Commande : {{ctx.results.0.hits.hits.0._source.command}}" }
+    }]
+  }]
+}

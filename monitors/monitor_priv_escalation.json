@@ -1,0 +1,40 @@
+{
+  "type": "monitor",
+  "name": "Privilege Escalation Detection",
+  "enabled": true,
+  "schedule": { "period": { "interval": 1, "unit": "MINUTES" } },
+  "inputs": [{
+    "search": {
+      "indices": ["ueba-events"],
+      "query": {
+        "size": 1,
+        "query": {
+          "bool": {
+            "must": [
+              { "match_phrase": { "tags": "mitre_privilege_escalation" } }
+            ],
+            "filter": [
+              { "range": { "@timestamp": { "gte": "now-5m" } } }
+            ]
+          }
+        }
+      }
+    }
+  }],
+  "triggers": [{
+    "name": "PrivilegeEscalationDetected",
+    "severity": "HIGH",
+    "condition": {
+      "script": {
+        "source": "ctx.results[0].hits.total.value > 0",
+        "lang": "painless"
+      }
+    },
+    "actions": [{
+      "name": "NotifyOnPrivilegeEscalation",
+      "destination_id": "VcduLJcB_WPuNZx3lk_6",
+      "subject_template": { "source": "ALERTE [Privilege Escalation] (Criticité: HIGH)" },
+      "message_template": { "source": "ALERTE : Élèvation de privilèges détectée ! Utilisateur : {{ctx.results.0.hits.hits.0._source.user}} Commande : {{ctx.results.0.hits.hits.0._source.command}}" }
+    }]
+  }]
+}
