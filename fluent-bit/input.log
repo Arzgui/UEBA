@@ -1,0 +1,31 @@
+{"timestamp":"2025-06-01T08:01:00Z", "event":"user_login", "user":"alice", "status":"success"}
+{"timestamp":"2025-06-01T08:03:00Z", "event":"user_login", "user":"bob", "status":"fail"}
+{"timestamp":"2025-06-01T08:03:05Z", "event":"user_login", "user":"bob", "status":"fail"}
+{"timestamp":"2025-06-01T08:03:12Z", "event":"user_login", "user":"bob", "status":"fail"}
+{"timestamp":"2025-06-01T08:04:00Z", "event":"user_login", "user":"bob", "status":"success"}
+{"timestamp":"2025-06-01T08:10:00Z", "event":"file_access", "user":"alice", "file":"HR_policy.docx", "access":"read"}
+{"timestamp":"2025-06-01T08:12:00Z", "event":"file_access", "user":"bob", "file":"salaries.xlsx", "access":"read"}
+{"timestamp":"2025-06-01T08:13:00Z", "event":"file_access", "user":"bob", "file":"secret_project.pdf", "access":"delete"}
+{"timestamp":"2025-06-01T08:15:00Z", "event":"privilege_escalation", "user":"eve", "method":"sudo", "result":"fail"}
+{"timestamp":"2025-06-01T08:17:00Z", "event":"privilege_escalation", "user":"eve", "method":"sudo", "result":"success"}
+{"timestamp":"2025-06-01T08:20:00Z", "event":"execute_file", "user":"bob", "file":"invoice.exe", "result":"success"}
+{"timestamp":"2025-06-01T08:21:00Z", "event":"execute_file", "user":"alice", "file":"powershell.exe", "result":"success"}
+{"timestamp":"2025-06-01T08:22:00Z", "event":"execute_file", "user":"bob", "file":"ransomware.exe", "result":"success"}
+{"timestamp":"2025-06-01T08:23:00Z", "event":"network_connection", "user":"alice", "src_ip":"10.0.0.3", "dst_ip":"8.8.8.8", "dst_port":53, "protocol":"dns"}
+{"timestamp":"2025-06-01T08:25:00Z", "event":"network_connection", "user":"eve", "src_ip":"10.0.0.4", "dst_ip":"104.16.0.0", "dst_port":8080, "protocol":"http"}
+{"timestamp":"2025-06-01T08:30:00Z", "event":"user_login", "user":"eve", "status":"fail"}
+{"timestamp":"2025-06-01T08:31:00Z", "event":"user_login", "user":"eve", "status":"fail"}
+{"timestamp":"2025-06-01T08:32:00Z", "event":"user_login", "user":"eve", "status":"fail"}
+{"timestamp":"2025-06-01T08:33:00Z", "event":"user_login", "user":"eve", "status":"success"}
+{"timestamp":"2025-06-01T08:40:00Z", "event":"file_access", "user":"eve", "file":"passwords.txt", "access":"read"}
+{"timestamp":"2025-06-01T08:41:00Z", "event":"file_access", "user":"eve", "file":"confidential.pdf", "access":"read"}
+{"timestamp":"2025-06-01T08:50:00Z", "event":"execute_file", "user":"eve", "file":"malware.ps1", "result":"success"}
+{"timestamp":"2025-06-01T09:00:00Z", "event":"network_connection", "user":"eve", "src_ip":"10.0.0.4", "dst_ip":"198.51.100.10", "dst_port":4444, "protocol":"tcp"}
+{"timestamp": "2025-05-22T15:30:00", "source": "windows", "EventID": 4625, "user": "jdupont", "message": "Echec de connexion", "src_ip": "192.168.1.10"}
+{"timestamp": "2025-05-22T15:31:00", "source": "windows", "EventID": 4624, "user": "admin", "message": "Connexion reussie", "src_ip": "10.10.10.3"}
+{"timestamp": "2025-05-22T15:32:00", "source": "linux", "event": "sshd", "user": "root", "action": "Failed password", "src_ip": "192.168.1.44"}
+{"timestamp": "2025-05-22T15:32:02", "source": "linux", "event": "sudo", "user": "alice", "action": "sudo su", "success": true}
+{"timestamp": "2025-05-22T15:32:10", "source": "firewall", "event": "deny", "src_ip": "123.45.67.8", "dst_ip": "10.10.10.5", "port": 3389, "proto": "tcp"}
+{"timestamp": "2025-05-22T15:33:05", "source": "app", "event": "login", "user": "service", "status": "failed", "message": "invalid credentials"}
+{"timestamp": "2025-05-22T15:34:15", "source": "app", "event": "file_upload", "user": "jdupont", "filename": "rapport.xlsx", "status": "success"}
+
