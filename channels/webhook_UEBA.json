@@ -1,0 +1,13 @@
+{
+  "name": "Webhook UEBA Channel",
+  "description": "Channel unique pour toutes les alertes UEBA",
+  "config_type": "webhook",
+  "is_enabled": true,
+  "webhook": {
+    "url": "https://webhook.site/...",
+    "header_params": {
+      "Content-Type": "application/json"
+    },
+    "method": "POST"
+  }
+}
