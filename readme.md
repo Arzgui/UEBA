@@ -103,7 +103,7 @@ chmod +x simulateur_injection.sh
 
 - **Brute Force SSH** : Détection d'attaques par dictionnaire sur SSH
 - **PowerShell suspect** : Analyse des commandes PowerShell potentiellement malveillantes
-- **⬆Élévation de privilèges** : Détection des tentatives d'escalade de privilèges
+- **Élévation de privilèges** : Détection des tentatives d'escalade de privilèges
 - **Processus suspects** : Identification de processus anormaux ou malveillants
 
 ### Capacités système
