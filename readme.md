@@ -1,4 +1,4 @@
-# 🔍 UEBA + OpenSearch - Proof of Concept
+# UEBA + OpenSearch - Proof of Concept
 
 **Une stack complète d'analyse comportementale (User and Entity Behavior Analytics) utilisant OpenSearch pour l'ingestion de logs, la détection d'anomalies, l'alerte et la visualisation en temps réel.**
 
