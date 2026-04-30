@@ -1,23 +1,98 @@
-# UEBA + OpenSearch - Proof of Concept
+# UEBA Pipeline — Détection d'anomalies comportementales sur logs Windows
 
-**Une stack complète d'analyse comportementale (User and Entity Behavior Analytics) utilisant OpenSearch pour l'ingestion de logs, la détection d'anomalies, l'alerte et la visualisation en temps réel.**
+> Pipeline complet d'ingestion, d'analyse et d'alerting sur événements Windows (EVTX), capable de détecter en temps réel des attaques par brute force, élévations de privilèges, commandes PowerShell suspectes et processus anormaux.
+
+---
+
+## Pourquoi ce projet
+
+Les équipes sécurité manquent souvent d'un outil simple pour corréler des événements Windows et déclencher des alertes automatiques sans investir dans un SIEM commercial. Ce PoC démontre qu'une stack open source (Fluent Bit + OpenSearch) suffit pour couvrir les cas d'usage UEBA les plus critiques.
 
 ---
 
 ## Architecture
 
 ```
-Logs → Fluent Bit → Data Prepper → OpenSearch → Alerting → Notifications
-                                        ↓
-                                   Dashboards
+Logs Windows (EVTX)
+        │
+        ▼
+   Fluent Bit          ← Collecte & forwarding HTTP
+        │
+        ▼
+  Data Prepper         ← Routage & transformation
+        │
+        ▼
+   OpenSearch          ← Indexation (index: ueba-events)
+     │       │
+     ▼       ▼
+ Alerting  Dashboards  ← Monitors + visualisation temps réel
+     │
+     ▼
+ Webhook / Notifications
 ```
 
-- **Ingestion** : Fluent Bit collecte les logs et les envoie à Data Prepper via HTTP
-- **Data Prepper** : Route et transforme les logs vers OpenSearch
-- **OpenSearch** : Indexe les données dans l'index `ueba-events`
-- **Alerting** : Des monitors détectent les patterns suspects et déclenchent des alertes
-- **Notifications** : Les alertes sont envoyées via un channel webhook unique
-- **Dashboard** : OpenSearch Dashboards permet de superviser en temps réel les détections et alertes
+---
+
+## Détections implémentées
+
+| Scénario | Fichier monitor | Ce qui est détecté |
+|---|---|---|
+| Brute force SSH | `monitor_bruteforce.json` | Tentatives répétées d'authentification |
+| PowerShell suspect | `monitor_powershell.json` | Commandes encodées ou obfusquées |
+| Élévation de privilèges | `monitor_priv_escalation.json` | Changements de tokens ou groupes |
+| Processus suspects | `monitor_process_suspect.json` | Processus anormaux ou non signés |
+
+---
+
+## Stack technique
+
+- **Fluent Bit** — ingestion légère et forwarding HTTP
+- **Data Prepper** — pipeline de transformation des logs
+- **OpenSearch 2.x** — indexation, alerting, dashboards
+- **Docker Compose** — déploiement one-shot de l'infrastructure
+
+---
+
+## Lancer le projet
+
+### Prérequis
+
+- Docker & Docker Compose installés
+- Ports 5601 et 9200 disponibles
+
+### Démarrage
+
+```bash
+git clone <repo-url>
+cd UEBA
+docker-compose up -d
+```
+
+### Déployer les monitors d'alerting
+
+```bash
+cd monitors/
+chmod +x setup_alerting.sh
+./setup_alerting.sh
+```
+
+### Injecter des logs de test
+
+```bash
+cd fluent-bit/
+
+# Injection ponctuelle
+chmod +x inject_logs.sh && ./inject_logs.sh
+
+# Simulation de charge continue
+chmod +x simulateur_injection.sh && ./simulateur_injection.sh
+```
+
+### Importer le dashboard
+
+1. Ouvrir OpenSearch Dashboards → [http://localhost:5601](http://localhost:5601)
+2. **Stack Management** → **Saved Objects** → **Import**
+3. Sélectionner `dashboard/export.ndjson`
 
 ---
 
@@ -26,156 +101,37 @@ Logs → Fluent Bit → Data Prepper → OpenSearch → Alerting → Notificatio
 ```
 UEBA/
 ├── channels/
-│   └── webhook-ueba.json           # Configuration du channel webhook
+│   └── webhook-ueba.json               # Channel webhook pour les alertes
 ├── dashboard/
-│   └── export.ndjson               # Export du dashboard OpenSearch
+│   └── export.ndjson                   # Dashboard OpenSearch (import prêt)
 ├── data-prepper/
-│   └── pipelines/
-│       └── pipelines.yaml          # Configuration des pipelines Data Prepper
+│   └── pipelines/pipelines.yaml        # Pipeline de transformation
 ├── fluent-bit/
-│   ├── inject_logs.sh              # Script d'injection de logs de test
-│   └── simulateur_injection.sh     # Simulateur de charge continue
+│   ├── inject_logs.sh                  # Injection ponctuelle de logs
+│   └── simulateur_injection.sh         # Simulation de charge continue
 ├── monitors/
-│   ├── monitor_bruteforce.json     # Détection d'attaques par brute force
-│   ├── monitor_powershell.json     # Détection de commandes PowerShell suspectes
-│   ├── monitor_priv_escalation.json # Détection d'élévation de privilèges
-│   ├── monitor_process_suspect.json # Détection de processus suspects
-│   └── setup_alerting.sh           # Script de déploiement des monitors
-├── .env                            # Variables d'environnement
+│   ├── monitor_bruteforce.json
+│   ├── monitor_powershell.json
+│   ├── monitor_priv_escalation.json
+│   ├── monitor_process_suspect.json
+│   └── setup_alerting.sh               # Déploiement automatique des monitors
+├── .env
 ├── .gitignore
-└── docker-compose.yml              # Configuration Docker
+└── docker-compose.yml
 ```
 
 ---
 
-## Installation et utilisation
+## Pistes d'évolution
 
-### 1. Lancer l'infrastructure
+**Nouvelles détections** — ransomware (chiffrement suspect), exfiltration de données, lateral movement, phase de reconnaissance
 
-```bash
-# Cloner le repository
-git clone <repo-url>
-cd UEBA
+**Intégrations** — Slack/Teams, PagerDuty, connexion à un SIEM existant, alertes email
 
-# Démarrer l'infrastructure
-docker-compose up -d
-```
-
-### 2. Configurer le pipeline
-
-Vérifiez et adaptez les configurations selon vos besoins :
-- **Data Prepper** : `data-prepper/pipelines/pipelines.yaml`
-- **Fluent Bit** : fichiers dans le dossier `fluent-bit/`
-
-### 3. Déployer les monitors et le channel d'alerting
-
-```bash
-# Déployer automatiquement tous les monitors
-cd monitors/
-chmod +x setup_alerting.sh
-./setup_alerting.sh
-```
-
-### 4. Injection de logs de test
-
-```bash
-# Injection ponctuelle de logs de test
-cd fluent-bit/
-chmod +x inject_logs.sh
-./inject_logs.sh
-
-# Simulation de charge continue
-chmod +x simulateur_injection.sh
-./simulateur_injection.sh
-```
-
-### 5. Supervision et visualisation
-
-1. Accédez à OpenSearch Dashboards (généralement http://localhost:5601)
-2. Allez dans **Stack Management** > **Saved Objects** > **Import**
-3. Importez le fichier `dashboard/export.ndjson`
+**Automatisation** — réponse automatique aux incidents, intégration CI/CD, rapports périodiques
 
 ---
 
-## Fonctionnalités principales
+## Auteur
 
-### Détections implémentées
-
-- **Brute Force SSH** : Détection d'attaques par dictionnaire sur SSH
-- **PowerShell suspect** : Analyse des commandes PowerShell potentiellement malveillantes
-- **Élévation de privilèges** : Détection des tentatives d'escalade de privilèges
-- **Processus suspects** : Identification de processus anormaux ou malveillants
-
-### Capacités système
-
-- **Alertes automatiques** avec notifications webhook
-- **Dashboard interactif** pour le suivi en temps réel
-- **Ingestion haute performance** via Fluent Bit et Data Prepper
-- **Extensibilité** pour ajouter de nouveaux scénarios de détection
-
----
-
-## Export/Import du Dashboard
-
-### Export
-1. Dans OpenSearch Dashboards : **Stack Management** > **Saved Objects**
-2. Sélectionnez les objets à exporter
-3. Cliquez sur **Export**
-
-### Import
-1. **Stack Management** > **Saved Objects** > **Import**
-2. Sélectionnez le fichier `dashboard/export.ndjson`
-3. Cliquez sur **Import**
-
----
-
-## Idées pour aller plus loin
-
-### Nouvelles détections
-- **Ransomware** : Détection de comportements de chiffrement suspect
-- **Exfiltration** : Analyse des transferts de données anormaux
-- **Lateral Movement** : Détection de mouvements latéraux dans le réseau
-- **Reconnaissance** : Identification des phases de reconnaissance
-
-### Intégrations
-- **SIEM** : Connecter les alertes à votre SIEM existant
-- **Slack/Teams** : Notifications directes dans vos canaux de communication
-- **Email** : Alertes par email pour les incidents critiques
-- **PagerDuty** : Escalade automatique des incidents
-
-### Automatisation
-- **Monitoring continu** : Injection automatisée de logs pour tests
-- **CI/CD** : Intégration dans vos pipelines de déploiement
-- **Response automatique** : Actions automatiques en cas de détection
-
-### Visualisations
-- **Métriques personnalisées** : KPIs spécifiques à votre environnement
-- **Thèmes personnalisés** : Adaptation de l'interface à votre charte graphique
-- **Rapports automatiques** : Génération de rapports périodiques
-
----
-
-## Prérequis
-
-- **Docker** et **Docker Compose**
-- **OpenSearch** 2.x+
-- **Fluent Bit** 1.9+
-- **Data Prepper** 2.x+
-
----
-
-## Contribution
-
-Les contributions sont les bienvenues ! N'hésitez pas à :
-- Proposer de nouvelles détections
-- Améliorer les dashboards existants
-- Signaler des bugs ou problèmes
-- Suggérer des améliorations
-
-
-## Auteur et contact
-Abdelkarim REZGUI
-
----
-
-**Tip** : Pour une meilleure expérience, consultez la documentation officielle d'[OpenSearch](https://opensearch.org/docs/) et de [Fluent Bit](https://docs.fluentbit.io/)
+**Abdelkarim Rezgui** — [LinkedIn](https://linkedin.com) · [GitHub](https://github.com)
