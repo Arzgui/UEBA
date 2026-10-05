@@ -1,7 +1,6 @@
-# UEBA Pipeline — Détection d'anomalies comportementales sur logs Windows
+# UEBA Pipeline — Détection d’activités suspectes — OpenSearch
 
-> Pipeline complet d'ingestion, d'analyse et d'alerting sur événements Windows (EVTX), capable de détecter en temps réel des attaques par brute force, élévations de privilèges, commandes PowerShell suspectes et processus anormaux.
-
+Collecte et analyse d’événements Windows, configuration de règles de détection et d’alertes, tests par simulation d’événements. Fluent Bit · Data Prepper · OpenSearch.
 ---
 
 ## Pourquoi ce projet
